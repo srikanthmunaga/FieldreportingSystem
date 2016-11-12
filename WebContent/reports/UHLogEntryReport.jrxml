@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Farmer Or BD activity Entry Rep" pageWidth="942" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="536410f9-d2c5-4564-884b-47bb9fdf196d">
+	<property name="ireport.zoom" value="1.024520183047608"/>
+	<property name="ireport.x" value="10"/>
+	<property name="ireport.y" value="95"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FRSTEST2"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" fontSize="10"/>
+	<style name="Column header" fontSize="10" isBold="true"/>
+	<style name="Detail" fontSize="10"/>
+	<style name="footer" forecolor="#666666" fontSize="7"/>
+	<parameter name="emp_id" class="java.lang.String"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<parameter name="tdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+l.BSFLUNIT_UCODE,
+(select BSFLUNIT_NAME from BSFLUNIT_mstr where BSFLUNIT_UCODE=l.BSFLUNIT_UCODE) as BSFLUNIT_NAME,
+(select area_name from area_mstr where area_id=(select area_id from BSFLUNIT_mstr where BSFLUNIT_UCODE=l.BSFLUNIT_UCODE)) as area_name,
+to_char(l.uhlog_date,'dd-mm-yyyy') as uhlog_date,
+(select s.activity_name as activity_name from activity_mstr s where s.activity_id=l.activity_id) as activity_id,
+(select s1.ACTCAT_NAME as activity_name1 from actcat_mstr s1 where  s1.actcat_id=(select s.actcat_id from activity_mstr s where  s.activity_id=l.activity_id)) as actcat_id,
+nvl((select c.vname from village_mstr c where c.vcode=l.vcode and c.BSFLUNIT_UCODE=l.BSFLUNIT_UCODE),' ') as vname,
+'REMOVE ' as pg_name,
+'REMOVE2' as estbl_name,
+l.UHLOG_AMTSPENT as UHLOG_AMTSPENT,
+l.uhlog_outreach as uhlog_outreach,
+l.uhlog_odcust as uhlog_odcust,
+l.uhlog_odamt as uhlog_odamt,
+'REMOVE3' as uhlog_place,
+l.uhlog_remarks
+from uhlog_service l
+where l.BSFLUNIT_UCODE in ($P!{emp_id}) and l.uhlog_date between TO_DATE($P{fdate}, 'dd-mm-yyyy') and TO_DATE($P{tdate}, 'dd-mm-yyyy')
+order by l.BSFLUNIT_UCODE,to_char(l.uhlog_date,'yyyy-mm-dd'),l.uhlog_seqid,l.activity_id]]>
+	</queryString>
+	<field name="BSFLUNIT_UCODE" class="java.lang.String"/>
+	<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+	<field name="area_name" class="java.lang.String"/>
+	<field name="uhlog_DATE" class="java.lang.String"/>
+	<field name="activity_ID" class="java.lang.String"/>
+	<field name="PG_NAME" class="java.lang.String"/>
+	<field name="ESTBL_NAME" class="java.lang.String"/>
+	<field name="uhlog_PLACE" class="java.lang.String"/>
+	<field name="uhlog_remarks" class="java.lang.String"/>
+	<field name="ACTIVITY_ID" class="java.lang.String"/>
+	<field name="ACTCAT_ID" class="java.lang.String"/>
+	<field name="VNAME" class="java.lang.String"/>
+	<field name="UHLOG_AMTSPENT" class="java.math.BigDecimal"/>
+	<field name="UHLOG_OUTREACH" class="java.math.BigDecimal"/>
+	<field name="UHLOG_ODCUST" class="java.math.BigDecimal"/>
+	<field name="UHLOG_ODAMT" class="java.math.BigDecimal"/>
+	<field name="UHLOG_PLACE" class="java.lang.String"/>
+	<field name="UHLOG_REMARKS" class="java.lang.String"/>
+	<group name="BSFLUNIT_UCODE" isReprintHeaderOnEachPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></groupExpression>
+		<groupHeader>
+			<band height="62" splitType="Prevent">
+				<textField>
+					<reportElement uuid="9815b02e-b058-47fc-8988-fe5c1a8fdda9" style="SubTitle" x="65" y="13" width="79" height="24"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="7e77d6df-bce7-4b7d-98cb-05bf762dadea" style="Column header" x="354" y="13" width="100" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Region Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="251332f8-0130-4d47-81b2-0488f077f1ef" x="144" y="13" width="105" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Unit Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a0e1528c-8941-49ce-a4ff-3c1217540bd5" style="Column header" x="0" y="13" width="65" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Unit No]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="6a0e4a76-adeb-4d84-9ae1-7fc32b9e9565" style="Detail" x="249" y="13" width="105" height="24" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false" pdfEncoding="Cp1251"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{BSFLUNIT_NAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="996ddc41-c982-4d37-9e72-aa27fa9bdf6b" style="Detail" x="454" y="13" width="142" height="24" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{area_name}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="e4b960f6-87a7-4ead-bb41-0940ff454baf" positionType="Float" x="0" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="97903ab3-7d33-43f7-8ebc-607aa91d6d5a" style="Column header" x="0" y="38" width="65" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[DATE]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="07f26640-7745-47c7-822a-ad74bae00eb5" positionType="Float" x="64" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="a18a0938-b17f-4505-914d-ff33b58aa3c7" style="Column header" x="65" y="38" width="79" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Village]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="3cd7205d-0494-4972-8f3a-fe998c1c1132" positionType="Float" x="143" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="86961da4-8ebd-4ea2-9d80-0c17ced7ce4a" style="Column header" x="144" y="38" width="105" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Activity Category]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="75bd81c2-af80-4470-b8ff-fa62301a3807" positionType="Float" x="248" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="de5852f7-c18a-4b3e-bed8-4aa3f05b58e2" style="Column header" x="249" y="38" width="105" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Activity]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="c6cf9de4-6763-4d85-8d8a-479cea904fa7" positionType="Float" x="353" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="f6748e48-d652-461e-b1c5-2c760b891b0f" style="Column header" x="354" y="38" width="100" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Amount Spent (Rs)]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="50f5547c-417a-4289-aadc-fbd8a40f8ab0" positionType="Float" x="545" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="5755bc63-89a5-4672-a06a-acbf523c4d08" positionType="Float" x="789" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="60b513e8-f356-45f7-98ff-6ad38daae21b" style="Column header" x="790" y="38" width="109" height="22">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Remarks]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="42c5a232-399e-4e40-9b03-2ec26d6fbd13" style="Column header" x="662" y="38" width="126" height="22">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[OD Amount (Rs)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="913e64ed-10bc-4d15-9749-59fbd0d4624d" style="Column header" x="546" y="38" width="113" height="22">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[OD Custmers]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="4ae80139-04f9-4d2f-8337-9318c0f78def" positionType="Float" x="453" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="83682732-aad0-4807-9c60-0dbee0118dd0" style="Column header" x="454" y="38" width="91" height="22"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Outreach]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="0fe2810b-3e81-4f73-82c3-07c4bbce53b3" positionType="Float" x="901" y="38" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="2bb44eda-6ba2-4758-b320-abca6748e07f" positionType="Float" x="660" y="37" width="1" height="24"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="eebe8985-cef7-40a8-839b-9ccb5db8fa05" positionType="FixRelativeToBottom" x="0" y="37" width="902" height="2" printWhenGroupChanges="BSFLUNIT_UCODE">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<line>
+					<reportElement uuid="bc19c3f0-3e58-46dc-8a26-3be6a4cfebd9" positionType="FixRelativeToBottom" x="0" y="0" width="902" height="1" printWhenGroupChanges="BSFLUNIT_UCODE">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="uhlog_DATE">
+		<groupExpression><![CDATA[$F{uhlog_DATE}]]></groupExpression>
+	</group>
+	<group name="activity_ID">
+		<groupExpression><![CDATA[$F{VNAME}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b192f0f9-439c-4f1c-bee3-cd810dec2038" x="0" y="0" width="900" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bhartiya Samruddhi Finance Limited]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bef249d1-0cff-4ca8-833b-6faaa3a6aa1b" style="footer" x="0" y="32" width="900" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From "+new java.text.SimpleDateFormat("dd-MMM-yyyy").format(new java.text.SimpleDateFormat("dd-MM-yyyy").parse($P{fdate}))+" to "+new java.text.SimpleDateFormat("dd-MMM-yyyy").format(new java.text.SimpleDateFormat("dd-MM-yyyy").parse($P{tdate}))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b2d58150-4507-4870-948f-33f58ea0f4bb" x="0" y="17" width="900" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UH Operations Entry Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement uuid="dc965200-8f75-4c8f-b7ae-095070634077" isPrintRepeatedValues="false" x="0" y="0" width="64" height="1" printWhenGroupChanges="uhlog_DATE"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="48068b7f-9c3a-4753-bb0c-f9e166d760a2" isPrintRepeatedValues="false" x="64" y="0" width="79" height="1" printWhenGroupChanges="activity_ID"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="97bcf0e9-d6b8-4e81-aad1-dbdb0f81f5ba" x="143" y="0" width="759" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="7f5518cf-e956-45ad-aff1-f051c3d3dc46" positionType="Float" stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="1" width="1" height="16" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="c7ce3922-10d0-4973-ba0a-16fb0d72c05c" style="Detail" isPrintRepeatedValues="false" x="1" y="0" width="65" height="16" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<textElement verticalAlignment="Top">
+					<font size="10" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uhlog_DATE}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d403029a-26d7-48eb-8911-1ed959b94957" positionType="Float" stretchType="RelativeToTallestObject" x="64" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="2c68c8af-2024-4add-90cc-54935bc4b867" style="Detail" isPrintRepeatedValues="false" x="65" y="0" width="79" height="16" printWhenGroupChanges="uhlog_DATE"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineStyle="Solid"/>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VNAME}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="19e0ffe7-6933-4c11-925c-ec2786fba857" positionType="Float" stretchType="RelativeToTallestObject" x="143" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="65ff22f6-fa2e-4b7f-b16d-6c210baa179f" style="Detail" x="144" y="0" width="105" height="16" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineStyle="Solid"/>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTCAT_ID}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="145dd929-4248-4e21-ac26-67671944f08f" positionType="Float" stretchType="RelativeToTallestObject" x="248" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="ae1204f7-e352-49dd-b47b-94053a7e4cd3" style="Detail" x="249" y="0" width="105" height="16" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineStyle="Solid"/>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTIVITY_ID}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="9ca18c76-315a-40e7-9185-da193627e62c" positionType="Float" stretchType="RelativeToTallestObject" x="353" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="3f890d58-4009-4d37-89a6-9039a1f7af8a" style="Detail" x="454" y="0" width="90" height="16" isRemoveLineWhenBlank="true" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineStyle="Solid"/>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UHLOG_OUTREACH}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="197dd680-3cb6-49de-a851-4c174bb24830" positionType="Float" stretchType="RelativeToTallestObject" x="453" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="f9f7b403-e43b-43bc-9470-2be98056663d" positionType="Float" stretchType="RelativeToTallestObject" x="545" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d3025e03-1d72-41c3-84d1-14ace4da1672" style="Detail" x="791" y="0" width="110" height="16" isPrintWhenDetailOverflows="true" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uhlog_remarks}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="6d5ba579-5f19-4bd3-a912-8716e6ff73d5" positionType="Float" stretchType="RelativeToTallestObject" x="789" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="true">
+				<reportElement uuid="4f8e9079-b0e4-4e1b-9d2b-5eb6929252fd" style="Detail" x="662" y="0" width="126" height="16" printWhenGroupChanges="BSFLUNIT_UCODE">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="10" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UHLOG_ODAMT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="b5e121e3-136a-4d32-9eb6-a5578640877f" style="Detail" x="546" y="0" width="112" height="16" printWhenGroupChanges="BSFLUNIT_UCODE">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="10" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UHLOG_ODCUST}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00">
+				<reportElement uuid="ee57a5d4-2a45-4052-a95a-ffb4ad8b0075" style="Detail" x="354" y="0" width="98" height="16" isRemoveLineWhenBlank="true" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineStyle="Solid"/>
+					<topPen lineStyle="Solid"/>
+					<leftPen lineStyle="Solid"/>
+					<bottomPen lineStyle="Solid"/>
+					<rightPen lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UHLOG_AMTSPENT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d5e102e5-e99f-4003-8d3a-54bb15edc48a" positionType="Float" stretchType="RelativeToTallestObject" x="901" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="7a7b9123-f052-4e53-973e-fe83cbe974eb" positionType="Float" stretchType="RelativeToTallestObject" x="660" y="1" width="1" height="16"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8e9f8a77-bbc6-43a6-80e0-64a8924cf9e8" style="footer" x="662" y="0" width="49" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement uuid="305bee0c-7765-45a9-adf7-a3a4ca689810" style="footer" x="711" y="0" width="91" height="20" isPrintWhenDetailOverflows="true" forecolor="#666666"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d367f89b-1c7b-4ea8-81ac-00e640fa1e0a" positionType="FixRelativeToBottom" x="0" y="0" width="902" height="2" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="603779bb-3a77-4e18-b968-bea1e934db2d" x="0" y="0" width="249" height="20" forecolor="#666666"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("EEEEE dd MMMMM yyyy h.mm a").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="14daedf6-f9d5-4155-a28c-74ed48d73fba" x="0" y="0" width="900" height="20"/>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Note: OD means Over Due , UH means Unit Head,  Amount Spent in Rupees, OD Amount in Rupees.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4e8debd2-975c-4234-b2ad-7c033a45c619" x="0" y="40" width="802" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[(Signature)                    ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cef1e7da-dac7-4f1b-9f6b-c3891bd2b63f" x="0" y="68" width="249" height="20" forecolor="#666666"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("EEEEE dd MMMMM yyyy h.mm a").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8bbbedf7-ba13-4e3d-8a40-48fb2ad3df0d" style="footer" x="662" y="68" width="49" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement uuid="6f5dc47c-36cc-4228-93fe-0f02c4cd2873" style="footer" x="711" y="68" width="91" height="20" isPrintWhenDetailOverflows="true" forecolor="#666666"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="5be60e55-3114-46ff-9203-3b601fbc93ea" positionType="FixRelativeToBottom" x="4" y="70" width="899" height="2" printWhenGroupChanges="BSFLUNIT_UCODE"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

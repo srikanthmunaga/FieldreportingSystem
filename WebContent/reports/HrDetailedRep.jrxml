@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HrDetailedRep" language="groovy" pageWidth="1381" pageHeight="900" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1341" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="97ce9158-6dc2-426d-9a32-cc84eae917d1">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="table_TH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="footer" forecolor="#666666" fontSize="7">
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<subDataset name="Dataset1" uuid="6699a9d4-ee75-47e9-b25b-9969e3c25988">
+		<parameter name="emp_id" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select    HUMA_MSTR.HUMA_ID as HUMA_ID,
+                HUMA_MSTR.HUMA_FNAME||' '|| HUMA_MSTR.HUMA_LNAME as HUMA_NAME,
+                huma_status,
+                HUMA_MSTR.HUMA_EMAIL as HUMA_EMAIL,
+                HUMA_MSTR.HUMA_MOBILE as HUMA_MOBILE,
+                (SELECT GRADE_ABBREVIATION FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_abbre,
+                (SELECT GRADE_NAME FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_name,
+                (SELECT GRADE_LEVEL FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_level,
+                (select  HM.HUMA_FNAME||' '|| HM.HUMA_LNAME||'-'||HM.HUMA_ID from HUMA_MSTR HM where HM.HUMA_ID= HUMA_MSTR.HUMA_ID) as RO_NAME,
+                HUMA_MSTR.BSFLUNIT_UCODE as BSFLUNIT_UCODE,
+                HUMA_MSTR.HUMA_PHONE as HUMA_PHONE,
+                BSFLUNIT_MSTR_1.BSFLUNIT_NAME as BSFLUNIT_NAME,
+                BSFLUNIT_MSTR_1.AREA_ID as AREA_ID ,
+         a.area_name
+from     area_mstr a,BSFLUNIT_MSTR BSFLUNIT_MSTR_1,
+                HUMA_MSTR HUMA_MSTR 
+ where   HUMA_MSTR.BSFLUNIT_UCODE=BSFLUNIT_MSTR_1.BSFLUNIT_UCODE and
+         BSFLUNIT_MSTR_1.AREA_ID=a.area_id and HUMA_DESIGNATION in ($P!{emp_id})]]>
+		</queryString>
+		<field name="HUMA_ID" class="java.lang.String"/>
+		<field name="HUMA_NAME" class="java.lang.String"/>
+		<field name="HUMA_STATUS" class="java.lang.String"/>
+		<field name="HUMA_EMAIL" class="java.lang.String"/>
+		<field name="HUMA_MOBILE" class="java.lang.String"/>
+		<field name="DESIG_ABBRE" class="java.lang.String"/>
+		<field name="DESIG_NAME" class="java.lang.String"/>
+		<field name="DESIG_LEVEL" class="java.lang.String"/>
+		<field name="RO_NAME" class="java.lang.String"/>
+		<field name="BSFLUNIT_UCODE" class="java.lang.String"/>
+		<field name="HUMA_PHONE" class="java.lang.String"/>
+		<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+		<field name="AREA_ID" class="java.lang.String"/>
+		<field name="AREA_NAME" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="emp_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select    HUMA_MSTR.HUMA_ID as HUMA_ID,
+                HUMA_MSTR.HUMA_FNAME||' '|| HUMA_MSTR.HUMA_LNAME as HUMA_NAME,
+                huma_status,
+                HUMA_MSTR.HUMA_EMAIL as HUMA_EMAIL,
+                HUMA_MSTR.HUMA_MOBILE as HUMA_MOBILE,
+                (SELECT GRADE_ABBREVIATION FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_abbre,
+                (SELECT GRADE_NAME FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_name,
+                (SELECT GRADE_LEVEL FROM  GRADE_MSTR GM WHERE GM.GRADE_ID=HUMA_MSTR.HUMA_DESIGNATION) AS DESIG_level,
+                (select  HM.HUMA_FNAME||' '|| HM.HUMA_LNAME||'-'||HM.HUMA_ID from HUMA_MSTR HM where HM.HUMA_ID= HUMA_MSTR.HUMA_ID) as RO_NAME,
+                HUMA_MSTR.BSFLUNIT_UCODE as BSFLUNIT_UCODE,
+                HUMA_MSTR.HUMA_PHONE as HUMA_PHONE,
+                BSFLUNIT_MSTR_1.BSFLUNIT_NAME as BSFLUNIT_NAME,
+                BSFLUNIT_MSTR_1.AREA_ID as AREA_ID ,
+         a.area_name
+from     area_mstr a,BSFLUNIT_MSTR BSFLUNIT_MSTR_1,
+                HUMA_MSTR HUMA_MSTR 
+ where   HUMA_MSTR.BSFLUNIT_UCODE=BSFLUNIT_MSTR_1.BSFLUNIT_UCODE and
+         BSFLUNIT_MSTR_1.AREA_ID=a.area_id and HUMA_DESIGNATION in ($P!{emp_id})]]>
+	</queryString>
+	<field name="BSFLUNIT_UCODE" class="java.lang.String"/>
+	<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+	<field name="HUMA_ID" class="java.lang.String"/>
+	<field name="HUMA_EMAIL" class="java.lang.String"/>
+	<field name="HUMA_PHONE" class="java.lang.String"/>
+	<field name="AREA_ID" class="java.lang.String"/>
+	<field name="AREA_NAME" class="java.lang.String"/>
+	<field name="HUMA_NAME" class="java.lang.String"/>
+	<field name="RO_NAME" class="java.lang.String"/>
+	<field name="DESIG_LEVEL" class="java.lang.String"/>
+	<field name="HUMA_MOBILE" class="java.lang.String"/>
+	<field name="DESIG_ABBRE" class="java.lang.String"/>
+	<field name="DESIG_NAME" class="java.lang.String"/>
+	<field name="HUMA_STATUS" class="java.lang.String"/>
+	<summary>
+		<band height="210">
+			<componentElement>
+				<reportElement uuid="692f60ea-ad2d-4281-a2d1-85857060b758" key="table 7" x="0" y="0" width="1341" height="210" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="a07cbfda-dada-4864-8463-da2af8727dd0">
+						<datasetParameter name="emp_id">
+							<datasetParameterExpression><![CDATA[$P{emp_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="1341" uuid="c1f8f275-8212-4c53-84c4-d746bad90427">
+						<jr:tableHeader style="table_TH" height="84" rowSpan="1">
+							<textField>
+								<reportElement uuid="31868f6c-870b-4a88-9a12-1edd1a43d7fe" x="0" y="21" width="1341" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font size="11" isBold="true" isUnderline="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["HR Detailed Report "]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="a20d76e8-6944-48d3-881c-7bd7ef49548f" x="0" y="63" width="1341" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font isBold="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="ffaafd02-b972-44ff-8ff5-94c6280b7c1b" x="0" y="42" width="1341" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font isBold="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Run date : "+new SimpleDateFormat("dd-MMM-yyyy h.mm a").format(new java.util.Date())+" "]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="257bbfc4-4b59-4b1e-a7d0-24916ba15b69" x="0" y="0" width="1341" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font size="12" isBold="true" isUnderline="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Bhartiya Samruddhi Finance Limited"]]></textFieldExpression>
+							</textField>
+						</jr:tableHeader>
+						<jr:tableFooter height="0"/>
+						<jr:columnFooter height="0"/>
+						<jr:column width="41" uuid="f10bb838-52da-4c22-a211-ed4a2b6cd775">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="449007d7-eb99-47ab-93e1-56d22fbc10bf" x="0" y="0" width="41" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[S.NO]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+									<reportElement uuid="50f1d637-cf0e-409d-bafe-8bb9bc4bad4d" x="0" y="0" width="41" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Center">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="dc080271-bdf2-47bf-a92b-a20798218b5c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="b6f12f65-1d85-44b3-938f-c780fb43a67f" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Region Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="2225f08b-9a03-4751-a114-c1d257b63779" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{AREA_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="d48128d1-cbd4-450c-bcb4-6ab9573990a5">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="e5ec0b35-2046-476f-91af-de450610e5e4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit No]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="00000" isBlankWhenNull="true">
+									<reportElement uuid="4b082ead-fd84-419d-98d2-c4a355d45b3c" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="b9bc7ec5-1e42-4b2a-b01f-e2df15e9e1f1">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="d2de9361-476e-473c-bbba-7ccf0e49bcf4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="8fa1ff51-4ded-4329-8f94-f691ff098f94" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{BSFLUNIT_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="7f833027-6d3e-46fb-bc99-a6d9a2a7a163">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="6e1fe016-b177-4ecf-b450-c8d8ddc1bd5b" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Emp Id]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="aa8b7d99-2a52-48c0-8ad0-97d3fc365ae3" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_ID}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="130" uuid="55e241ed-ba6e-45a3-a035-6241de1607ef">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="bde275e2-8101-43a5-824f-a15fef888195" x="0" y="0" width="130" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Employee Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="e7f166d2-9ea5-4f61-830d-35b23edd0bf7" x="0" y="0" width="130" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="55e241ed-ba6e-45a3-a035-6241de1607ef">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="f10d754f-e778-4619-97c9-ef41b617b237" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Status]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="4a516352-fd1b-4a12-a965-6dbf38d7ccdf" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_STATUS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="100" uuid="24b1347d-df69-4dce-ad67-de756cdfa8c2">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="cf600f97-9de6-4015-b3b5-11f46ea29787" mode="Transparent" x="0" y="0" width="100" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Desig]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="8e0a090d-3683-427c-9173-e0ac6011ba14" x="0" y="0" width="100" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{DESIG_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="24b1347d-df69-4dce-ad67-de756cdfa8c2">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="cf600f97-9de6-4015-b3b5-11f46ea29787" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Designation]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="8e0a090d-3683-427c-9173-e0ac6011ba14" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{DESIG_ABBRE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="c549f62f-4df2-4148-b509-80a62a3c716c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="1487aa57-bb0c-4399-bb57-b6b5eca6bf7d" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF">
+										<property name="local_mesure_unitx" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.x" value="px"/>
+										<property name="local_mesure_unity" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.y" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Grade Level]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="165dce0c-8565-4d97-bf54-647cbe6d940a" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{DESIG_LEVEL}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="130" uuid="0afdad44-3c79-46a2-bbc7-9b54af9a9895">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="04107dd0-5417-46e4-b613-79f896d82db2" mode="Transparent" x="0" y="0" width="130" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Reporting Officer]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="947369b4-8236-4961-ae71-3768b547b344" x="0" y="0" width="130" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{RO_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="130" uuid="fcb263fa-0369-43d9-8225-f2917a8388c6">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="68358d6b-ffc2-42ba-8714-3c2f5d199c6a" mode="Transparent" x="0" y="0" width="130" height="60" forecolor="#000000" backcolor="#FFFFFF">
+										<property name="local_mesure_unitx" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.x" value="px"/>
+										<property name="local_mesure_unity" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.y" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Email]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="e9f987c0-4741-44cc-aceb-cc038f32777e" x="0" y="0" width="130" height="18" isPrintWhenDetailOverflows="true">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_EMAIL}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="934166ab-85df-407b-b117-f98fda1d0202">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="617f7841-4ea7-41ec-a52c-582e6fe7e72b" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF">
+										<property name="local_mesure_unity" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.y" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Mobile Number]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="4efb3b49-dca2-47da-9f38-2217b2727656" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true">
+										<property name="local_mesure_unitx" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.x" value="px"/>
+										<property name="local_mesure_unity" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.y" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+									</reportElement>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_MOBILE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="3297fe33-4c02-4bed-8cff-5faec7e82d7b">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="b980f49d-4d6c-4112-946e-a91227c2d7d7" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Phone Number]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="18"/>
+							<jr:detailCell style="table_TD" height="18" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="395beb17-7a68-4a24-ac1c-aa2fd55ca9cf" x="0" y="0" width="90" height="18" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Left">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{HUMA_PHONE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

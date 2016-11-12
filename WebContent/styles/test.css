@@ -1,0 +1,19 @@
+@CHARSET "ISO-8859-1";
+
+p.first {
+	color: red;
+}
+
+p.second {
+	color: blue;
+}
+
+.papu {
+	BORDER-RIGHT: #cdd5e0 1px solid;
+	FONT-SIZE: 12px;
+	BORDER-LEFT: #cdd5e0 1px solid;
+	COLOR: #039;
+	BORDER-TOP-STYLE: none;
+	FONT-FAMILY: Verdana, Geneva, sans-serif;
+	BORDER-BOTTOM-STYLE: none
+}

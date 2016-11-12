@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Total Area&apos;s Recovery Summary Report" language="groovy" pageWidth="991" pageHeight="900" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="951" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="97ce9158-6dc2-426d-9a32-cc84eae917d1">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FRS DB"/>
+	<style name="table_TH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="footer" forecolor="#666666" fontSize="7">
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<subDataset name="New Dataset 1" uuid="4c400a55-98e1-4a64-a57b-2d38e50eea22">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FRS DB"/>
+		<parameter name="emp_id" class="java.lang.String"/>
+		<parameter name="fdate" class="java.lang.String"/>
+		<parameter name="tdate" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select area_name,
+BSFLUNIT_UCODE,
+BSFLUNIT_NAME,
+sum(FRS_VILLAGE_COUNT) as village_count, 
+sum(FRS_CUST_COUNT) as cust_count,
+sum(FRS_TOTAL_AMT) as total_amt,
+sum(FRS_TOTAL_ACCOUNTS) total_accounts, 
+sum(FRS_OD_AMT) as od_amt,
+sum(FRS_OD_ACCOUNTS) as OD_ACCOUNTS,sum(FRS_SDRCUST_COUNT) as FRS_SDRCUST_COUNT 
+from FRSView
+where BSFLUNIT_UCODE in ($P!{emp_id}) and  FRS_DATE  BETWEEN 
+TO_DATE($P{fdate}, 'dd-mm-yyyy') and TO_DATE($P{tdate}, 'dd-mm-yyyy') 
+group by area_name,BSFLUNIT_UCODE,BSFLUNIT_NAME 
+order by area_name,BSFLUNIT_UCODE]]>
+		</queryString>
+		<field name="area_name" class="java.lang.String"/>
+		<field name="VILLAGE_COUNT" class="java.math.BigDecimal"/>
+		<field name="CUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="TOTAL_AMT" class="java.math.BigDecimal"/>
+		<field name="TOTAL_ACCOUNTS" class="java.math.BigDecimal"/>
+		<field name="OD_AMT" class="java.math.BigDecimal"/>
+		<field name="OD_ACCOUNTS" class="java.math.BigDecimal"/>
+		<field name="FRS_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="BSFLUNIT_UCODE" class="java.math.BigDecimal"/>
+		<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+		<variable name="sumOD_ACCOUNTS" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{OD_ACCOUNTS}]]></variableExpression>
+		</variable>
+		<variable name="sumOD_AMT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{OD_AMT}]]></variableExpression>
+		</variable>
+		<variable name="sumTOTAL_ACCOUNTS" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_ACCOUNTS}]]></variableExpression>
+		</variable>
+		<variable name="sumVILLAGE_COUNT_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{VILLAGE_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="sumCUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{CUST_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="sumTOTAL_AMT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMT}]]></variableExpression>
+		</variable>
+		<variable name="sumFRS_SDRCUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{FRS_SDRCUST_COUNT}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="emp_id" class="java.lang.String"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<parameter name="tdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select area_name,
+BSFLUNIT_UCODE,
+BSFLUNIT_NAME,
+sum(FRS_VILLAGE_COUNT) as village_count, 
+sum(FRS_CUST_COUNT) as cust_count,
+sum(FRS_TOTAL_AMT) as total_amt,
+sum(FRS_TOTAL_ACCOUNTS) total_accounts, 
+sum(FRS_OD_AMT) as od_amt,
+sum(FRS_OD_ACCOUNTS) as OD_ACCOUNTS,sum(FRS_SDRCUST_COUNT) as FRS_SDRCUST_COUNT 
+from FRSView
+where BSFLUNIT_UCODE in ($P!{emp_id}) and  FRS_DATE  BETWEEN 
+TO_DATE($P{fdate}, 'dd-mm-yyyy') and TO_DATE($P{tdate}, 'dd-mm-yyyy') 
+group by area_name,BSFLUNIT_UCODE,BSFLUNIT_NAME 
+order by area_name,BSFLUNIT_UCODE]]>
+	</queryString>
+	<field name="area_name" class="java.lang.String"/>
+	<field name="VILLAGE_COUNT" class="java.math.BigDecimal"/>
+	<field name="CUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_AMT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_ACCOUNTS" class="java.math.BigDecimal"/>
+	<field name="OD_AMT" class="java.math.BigDecimal"/>
+	<field name="OD_ACCOUNTS" class="java.math.BigDecimal"/>
+		<field name="FRS_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="BSFLUNIT_UCODE" class="java.lang.String"/>
+	<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+	<summary>
+		<band height="120">
+			<componentElement>
+				<reportElement uuid="692f60ea-ad2d-4281-a2d1-85857060b758" key="table 7" x="0" y="0" width="951" height="120" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 1" uuid="a07cbfda-dada-4864-8463-da2af8727dd0">
+						<datasetParameter name="emp_id">
+							<datasetParameterExpression><![CDATA[$P{emp_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fdate">
+							<datasetParameterExpression><![CDATA[$P{fdate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="tdate">
+							<datasetParameterExpression><![CDATA[$P{tdate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="951" uuid="c1f8f275-8212-4c53-84c4-d746bad90427">
+						<jr:tableHeader style="table_TH" height="84" rowSpan="1">
+							<textField>
+								<reportElement uuid="31868f6c-870b-4a88-9a12-1edd1a43d7fe" x="0" y="21" width="951" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font size="11" isBold="true" isUnderline="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Total Unit's Recovery Summary Report"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="a20d76e8-6944-48d3-881c-7bd7ef49548f" x="0" y="63" width="951" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font isBold="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["From [ "+$P{fdate}+" ] to [ "+$P{tdate}+" ]"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="ffaafd02-b972-44ff-8ff5-94c6280b7c1b" x="0" y="42" width="951" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font isBold="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Run date : "+new SimpleDateFormat("dd-MMM-yyyy h.mm a").format(new java.util.Date())+" "]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="257bbfc4-4b59-4b1e-a7d0-24916ba15b69" x="0" y="0" width="951" height="21" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Center" verticalAlignment="Top">
+									<font size="12" isBold="true" isUnderline="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Bhartiya Samruddhi Finance Limited"]]></textFieldExpression>
+							</textField>
+						</jr:tableHeader>
+						<jr:tableFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="83612516-cf98-4201-bffa-5e8f3707bbb9" x="0" y="0" width="951" height="20" isPrintWhenDetailOverflows="true"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Note:  OD - Over Due, A/C - Account"]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:column width="41" uuid="f10bb838-52da-4c22-a211-ed4a2b6cd775">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="449007d7-eb99-47ab-93e1-56d22fbc10bf" x="0" y="0" width="41" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[S.NO]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+									<reportElement uuid="50f1d637-cf0e-409d-bafe-8bb9bc4bad4d" x="0" y="0" width="41" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Center">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="dc080271-bdf2-47bf-a92b-a20798218b5c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="b6f12f65-1d85-44b3-938f-c780fb43a67f" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Region Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="2225f08b-9a03-4751-a114-c1d257b63779" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{area_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="d48128d1-cbd4-450c-bcb4-6ab9573990a5">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="e5ec0b35-2046-476f-91af-de450610e5e4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit No]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="00000" isBlankWhenNull="true">
+									<reportElement uuid="4b082ead-fd84-419d-98d2-c4a355d45b3c" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="b9bc7ec5-1e42-4b2a-b01f-e2df15e9e1f1">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="d2de9361-476e-473c-bbba-7ccf0e49bcf4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="8fa1ff51-4ded-4329-8f94-f691ff098f94" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{BSFLUNIT_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="100" uuid="24b1347d-df69-4dce-ad67-de756cdfa8c2">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="cf600f97-9de6-4015-b3b5-11f46ea29787" mode="Transparent" x="0" y="0" width="100" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Number of villages Visited]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="eeaaad1b-0f37-4b11-987f-2172d8de5fd0" x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumVILLAGE_COUNT_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="8e0a090d-3683-427c-9173-e0ac6011ba14" x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{VILLAGE_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="726615fb-5f1c-4fd1-8860-d1ced5741019">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="68358d6b-ffc2-42ba-8714-3c2f5d199c6a" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No of customers approached]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="90f47602-a36a-4d32-b414-a2e5e8355e78" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="e9f987c0-4741-44cc-aceb-cc038f32777e" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{CUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="c549f62f-4df2-4148-b509-80a62a3c716c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="617f7841-4ea7-41ec-a52c-582e6fe7e72b" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Total Recovery Amount collected]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="712658a2-d878-4279-a453-54570193470a" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumTOTAL_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="4efb3b49-dca2-47da-9f38-2217b2727656" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="0afdad44-3c79-46a2-bbc7-9b54af9a9895">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="04107dd0-5417-46e4-b613-79f896d82db2" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[ No of recovery Accounts]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="22962d20-15a9-4314-b1b8-d3c9ddbc3797" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumTOTAL_ACCOUNTS}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="947369b4-8236-4961-ae71-3768b547b344" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_ACCOUNTS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="fcb263fa-0369-43d9-8225-f2917a8388c6">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="736ef774-2e1e-4c52-a2ba-8c39992c1c9f" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[OD Amount Collected]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="cc8c1a53-1024-49cc-8f61-561ebed771fb" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumOD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="d656b751-d128-4cb3-a593-4fd841391a49" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{OD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="934166ab-85df-407b-b117-f98fda1d0202">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="a4bc031b-307e-4235-9bb7-97ba92340a20" mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No of OD Accounts closed]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="c2fbfe2e-88dd-4f5c-bc17-a074c8788f30" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumOD_ACCOUNTS}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="a8ea99de-e494-4c60-95ff-f903d2aed959" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{OD_ACCOUNTS}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" >
+							<jr:columnHeader style="table_TH" height="60">
+								<staticText>
+									<reportElement mode="Transparent" x="0" y="0" width="90" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No of SDR Customers Identified]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{sumFRS_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0"/>
+										<leftPen lineWidth="0.0"/>
+										<bottomPen lineWidth="0.0"/>
+										<rightPen lineWidth="0.0"/>
+									</box>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{FRS_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

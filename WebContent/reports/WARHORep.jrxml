@@ -1,0 +1,927 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WAR Room HO Report" language="groovy" pageWidth="1083" pageHeight="1050" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1040" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="97ce9158-6dc2-426d-9a32-cc84eae917d1">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FRS_TEST2"/>
+	<style name="table_TH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<style name="footer" forecolor="#666666" fontSize="7">
+		<paragraph lineSpacing="Single"/>
+	</style>
+	<subDataset name="New Dataset 1" uuid="4c400a55-98e1-4a64-a57b-2d38e50eea22">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FRS_TEST2"/>
+		<parameter name="emp_id" class="java.lang.String"/>
+		<parameter name="fdate" class="java.lang.String"/>
+		<parameter name="tdate" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select 
+unitcode,
+unit_name,
+area_name,
+H0_REMARKS,HO_REASON,
+WAR_POD,
+sum(FRS_OD_AMT) as SFRS_OD_AMT,
+sum(FRS_VILLAGE_COUNT) as SFRS_VILLAGE_COUNT,
+sum(FRS_CUST_COUNT) as SFRS_CUST_COUNT,
+sum(WAR_VILLAGES) as SWAR_VILLAGE_COUNT,
+sum(WAR_CUST_COUNT) as SWAR_CUST_COUNT,
+sum(WAR_SDRCUST_COUNT) as SWAR_SDRCUST_COUNT,
+sum(FRS_SDRCUST_COUNT) as SFRS_SDRCUST_COUNT,
+sum(TARGET_FRS_OD_AMT) as STARGET_FRS_OD_AMT 
+from   
+(select
+to_char(h.dates,'dd-Mon-yyyy') as FRS_DATE,
+to_char(h.dates,'Day') as Days,
+h.huma_id,
+(select Actual_pod(TO_DATE($P{fdate},'dd-mm-yyyy'),'HO','') from dual) as WAR_POD,
+(select HUMA_FNAME||' '||HUMA_LNAME from huma_mstr where huma_id=h.huma_id) as HUMA_NAME,
+(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id) as unitcode,
+(select area_name from area_mstr where area_id=(select area_id from bsflunit_mstr where bsflunit_ucode=(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id))) as area_name,
+(select bsflunit_name from bsflunit_mstr where bsflunit_ucode=(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) as unit_name,
+(select war_Backlogs(TO_DATE($P{tdate},'dd-mm-yyyy'),'HO',(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) from dual) H0_REMARKS,
+(select war_Reasons(TO_DATE($P{tdate},'dd-mm-yyyy'),'HO',(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) from dual) as HO_REASON,
+h.huma_id HUMA_ID,
+fr.FRS_OD_AMT FRS_OD_AMT ,
+fr.FRS_VILLAGE_COUNT FRS_VILLAGE_COUNT,
+fr.FRS_CUST_COUNT FRS_CUST_COUNT,
+length(wt.WAR_VILLAGES)-length(replace(wt.WAR_VILLAGES,'::',','))+1 as WAR_VILLAGES,  
+wt.WAR_CUST_COUNT WAR_CUST_COUNT,
+wt.WAR_SDRCUST_COUNT WAR_SDRCUST_COUNT, 
+fr.FRS_SDRCUST_COUNT FRS_SDRCUST_COUNT,
+tfr.TARGET_FRS_OD_AMT TARGET_FRS_OD_AMT 
+FROM (SELECT *
+            FROM (    SELECT TO_DATE ($P{fdate}, 'dd-mm-yyyy') + LEVEL - 1 dates
+                        FROM DUAL
+                  CONNECT BY LEVEL <=
+                                  (  TO_DATE ($P{tdate}, 'dd-mm-yyyy')
+                                   - TO_DATE ($P{fdate}, 'dd-mm-yyyy'))
+                                + 1) d,
+                 (SELECT huma_id
+                    FROM huma_mstr
+                   WHERE bsflunit_ucode IN ($P!{emp_id}) and upper(huma_status) LIKE '%ACTIVE%' and huma_DESIGNATION IN (select grade_id from grade_mstr where (GRADE_name like '%LSR%' or GRADE_name like '%FX%' or GRADE_name like '%FS%'))) h) h,
+         WAR_TARGET wt,
+         TARGET_FRS_RECOVERY tfr,
+         FRS_RECOVERY fr
+   WHERE     (    h.dates = wt.war_date(+)
+              AND h.dates = tfr.target_frs_date(+)
+              AND h.dates = fr.frs_date(+))
+         AND (    h.huma_id = wt.huma_id(+)
+              AND h.huma_id = tfr.huma_id(+)
+              AND h.huma_id = fr.huma_id(+))
+order by area_name,unit_name,h.HUMA_ID,h.dates) 
+group by unitcode ,unit_name,area_name,H0_REMARKS,HO_REASON,WAR_POD]]>
+		</queryString>
+		<field name="unitcode" class="java.lang.String"/>
+		<field name="unit_name" class="java.lang.String"/>
+		<field name="area_name" class="java.lang.String"/>
+		<field name="H0_REMARKS" class="java.lang.String"/>
+		<field name="HO_REASON" class="java.lang.String"/>
+		<field name="WAR_POD" class="java.math.BigDecimal"/>
+		<field name="SFRS_OD_AMT" class="java.math.BigDecimal"/>
+		<field name="SFRS_VILLAGE_COUNT" class="java.math.BigDecimal"/>
+		<field name="SFRS_CUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="SWAR_VILLAGE_COUNT" class="java.math.BigDecimal"/>
+		<field name="SWAR_CUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="SWAR_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="SFRS_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+		<field name="STARGET_FRS_OD_AMT" class="java.math.BigDecimal"/>
+		<variable name="Sum_SFRS_OD_AMT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SFRS_OD_AMT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SFRS_CUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SFRS_CUST_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SFRS_VILLAGE_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SFRS_VILLAGE_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SWAR_VILLAGE_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SWAR_VILLAGE_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_STARGET_FRS_OD_AMT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{STARGET_FRS_OD_AMT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SWAR_CUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SWAR_CUST_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SWAR_SDRCUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SWAR_SDRCUST_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_SFRS_SDRCUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SFRS_SDRCUST_COUNT}]]></variableExpression>
+		</variable>
+		<variable name="Sum_FRS_SDRCUST_COUNT" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{SFRS_SDRCUST_COUNT}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="emp_id" class="java.lang.String"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<parameter name="tdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+unitcode,
+unit_name,
+area_name,
+H0_REMARKS,
+HO_REASON,
+WAR_POD,
+sum(FRS_OD_AMT) as SFRS_OD_AMT,
+sum(FRS_VILLAGE_COUNT) as SFRS_VILLAGE_COUNT,
+sum(FRS_CUST_COUNT) as SFRS_CUST_COUNT,
+sum(WAR_VILLAGES) as SWAR_VILLAGE_COUNT,
+sum(WAR_CUST_COUNT) as SWAR_CUST_COUNT,
+sum(WAR_SDRCUST_COUNT) as SWAR_SDRCUST_COUNT,
+sum(FRS_SDRCUST_COUNT) as SFRS_SDRCUST_COUNT,
+sum(TARGET_FRS_OD_AMT) as STARGET_FRS_OD_AMT 
+from   
+(select
+to_char(h.dates,'dd-Mon-yyyy') as FRS_DATE,
+to_char(h.dates,'Day') as Days,
+h.huma_id,
+(select Actual_pod(TO_DATE($P{fdate},'dd-mm-yyyy'),'HO','') from dual) as WAR_POD,
+(select HUMA_FNAME||' '||HUMA_LNAME from huma_mstr where huma_id=h.huma_id) as HUMA_NAME,
+(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id) as unitcode,
+(select area_name from area_mstr where area_id=(select area_id from bsflunit_mstr where bsflunit_ucode=(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id))) as area_name,
+(select bsflunit_name from bsflunit_mstr where bsflunit_ucode=(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) as unit_name,
+(select war_Backlogs(TO_DATE($P{tdate},'dd-mm-yyyy'),'HO',(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) from dual) H0_REMARKS,
+(select war_Reasons(TO_DATE($P{tdate},'dd-mm-yyyy'),'HO',(select bsflunit_ucode from huma_mstr where huma_id=h.huma_id)) from dual) as HO_REASON,
+h.huma_id HUMA_ID,
+fr.FRS_OD_AMT FRS_OD_AMT ,
+fr.FRS_VILLAGE_COUNT FRS_VILLAGE_COUNT,
+fr.FRS_CUST_COUNT FRS_CUST_COUNT,
+length(wt.WAR_VILLAGES)-length(replace(wt.WAR_VILLAGES,'::',','))+1 as WAR_VILLAGES,  
+wt.WAR_CUST_COUNT WAR_CUST_COUNT,
+wt.WAR_SDRCUST_COUNT WAR_SDRCUST_COUNT, 
+fr.FRS_SDRCUST_COUNT FRS_SDRCUST_COUNT,
+tfr.TARGET_FRS_OD_AMT TARGET_FRS_OD_AMT 
+FROM (SELECT *
+            FROM (    SELECT TO_DATE ($P{fdate}, 'dd-mm-yyyy') + LEVEL - 1 dates
+                        FROM DUAL
+                  CONNECT BY LEVEL <=
+                                  (  TO_DATE ($P{tdate}, 'dd-mm-yyyy')
+                                   - TO_DATE ($P{fdate}, 'dd-mm-yyyy'))
+                                + 1) d,
+                 (SELECT huma_id
+                    FROM huma_mstr
+                   WHERE bsflunit_ucode IN ($P!{emp_id}) and upper(huma_status) LIKE '%ACTIVE%' and huma_DESIGNATION IN (select grade_id from grade_mstr where (GRADE_name like '%LSR%' or GRADE_name like '%FX%' or GRADE_name like '%FS%'))) h) h,
+         WAR_TARGET wt,
+         TARGET_FRS_RECOVERY tfr,
+         FRS_RECOVERY fr
+   WHERE     (    h.dates = wt.war_date(+)
+              AND h.dates = tfr.target_frs_date(+)
+              AND h.dates = fr.frs_date(+))
+         AND (    h.huma_id = wt.huma_id(+)
+              AND h.huma_id = tfr.huma_id(+)
+              AND h.huma_id = fr.huma_id(+))
+order by area_name,unit_name,h.HUMA_ID,h.dates) 
+group by unitcode ,unit_name,area_name,H0_REMARKS,HO_REASON,WAR_POD]]>
+	</queryString>
+	<field name="unitcode" class="java.lang.String"/>
+	<field name="unit_name" class="java.lang.String"/>
+	<field name="area_name" class="java.lang.String"/>
+	<field name="H0_REMARKS" class="java.lang.String"/>
+	<field name="HO_REASON" class="java.lang.String"/>
+	<field name="WAR_POD" class="java.math.BigDecimal"/>
+	<field name="SFRS_OD_AMT" class="java.math.BigDecimal"/>
+	<field name="SFRS_VILLAGE_COUNT" class="java.math.BigDecimal"/>
+	<field name="SFRS_CUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="SWAR_VILLAGE_COUNT" class="java.math.BigDecimal"/>
+	<field name="SWAR_CUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="SWAR_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="SFRS_SDRCUST_COUNT" class="java.math.BigDecimal"/>
+	<field name="STARGET_FRS_OD_AMT" class="java.math.BigDecimal"/>
+	<variable name="Sum_TARGET_FRS_OD_AMT" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SFRS_OD_AMT}]]></variableExpression>
+	</variable>
+	<summary>
+		<band height="512">
+			<componentElement>
+				<reportElement uuid="692f60ea-ad2d-4281-a2d1-85857060b758" key="table 7" style="table_TD" x="0" y="150" width="1040" height="320" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="New Dataset 1" uuid="a07cbfda-dada-4864-8463-da2af8727dd0">
+						<datasetParameter name="emp_id">
+							<datasetParameterExpression><![CDATA[$P{emp_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="fdate">
+							<datasetParameterExpression><![CDATA[$P{fdate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="tdate">
+							<datasetParameterExpression><![CDATA[$P{tdate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="1040" uuid="c1f8f275-8212-4c53-84c4-d746bad90427">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<jr:tableFooter style="table_TD" height="220" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="83612516-cf98-4201-bffa-5e8f3707bbb9" x="0" y="80" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font isBold="true" isItalic="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[" What is your action plan for covering up the backlog?"]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="e274a916-7e3a-4a78-bd9a-6bf612b2d317" x="0" y="0" width="1040" height="20" isPrintWhenDetailOverflows="true"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["If the difference between Actual POD and Target POD is more than 20%, give detailed reasons thereof and what corrective action has to be taken and by when?"]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="060d79ba-fb11-41ef-80f7-34647a92538f" x="0" y="161" width="1040" height="21" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isBold="false" isItalic="false" isUnderline="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Note:"]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="6f949edf-e628-4132-94de-2a6e2f404546" x="0" y="182" width="1040" height="22" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isBold="true" isItalic="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA["This report to be sent on every Monday morning to HO WAR Room at warroom@basixindia.com "]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="e12d311c-306b-488a-8735-c0b80b0d93b7" x="0" y="20" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{HO_REASON}]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="5756e0d2-ff68-4a17-a813-5cd1f71b545d" x="0" y="40" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="1751e39a-cf21-4f0d-b089-7690242352c4" x="0" y="60" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="ffc4672a-52cb-4642-a6aa-8a24d1f3227e" x="0" y="100" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{H0_REMARKS}]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="d50c1ac3-e385-4625-883e-ebe1816be37b" x="0" y="120" width="1040" height="20" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="b4ae8096-7d6b-4741-ad06-bff5e78d61e7" x="0" y="140" width="1040" height="21" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+									<font isItalic="true"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[""]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:column width="41" uuid="f10bb838-52da-4c22-a211-ed4a2b6cd775">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="449007d7-eb99-47ab-93e1-56d22fbc10bf" x="0" y="0" width="41" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[S.NO]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+									<reportElement uuid="50f1d637-cf0e-409d-bafe-8bb9bc4bad4d" x="0" y="0" width="41" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="4c10017a-435d-4de8-891b-2ee723780a69">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60">
+								<staticText>
+									<reportElement uuid="b6f12f65-1d85-44b3-938f-c780fb43a67f" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Region Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="d065ccb3-d299-4229-8557-2dba346ec7db" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<box>
+										<pen lineWidth="0.0"/>
+										<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{area_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="dc080271-bdf2-47bf-a92b-a20798218b5c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="c0953feb-6bfe-4915-86ff-24c215156e09" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit Code]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1"/>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="0bd82517-8f9e-403c-adf7-b899890312d1" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{unitcode}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="a0a87275-3139-45f3-b98d-cf5e7954c5ec">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="72fd1955-fc5b-4e26-b6f1-bb64c62fa30c" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Unit Name]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField>
+									<reportElement uuid="3ea28dc3-77eb-4e41-bbd6-8d81eb099d68" x="0" y="0" width="90" height="20"/>
+									<textElement/>
+									<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement uuid="28c919c3-38b4-4846-afea-09ab48f05490" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{unit_name}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="0473f925-59aa-4a6a-b3f8-3740470311f0">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60">
+								<staticText>
+									<reportElement uuid="f745ce61-3493-44fa-ab0f-fe18f8c896a7" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No.of Villages to be visited]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="45a4dc62-9da6-400f-aa86-b635a9f955a0" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SWAR_VILLAGE_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="b8222402-8a41-4370-9105-ef96baae44a0" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SWAR_VILLAGE_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="d48128d1-cbd4-450c-bcb4-6ab9573990a5">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="e5ec0b35-2046-476f-91af-de450610e5e4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Actual No.of  Villages visited]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="c180bf83-b588-4317-bc58-401c40b95929" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SFRS_VILLAGE_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="4b082ead-fd84-419d-98d2-c4a355d45b3c" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SFRS_VILLAGE_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="b9bc7ec5-1e42-4b2a-b01f-e2df15e9e1f1">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="d9cb36c5-5625-41f5-9a24-66127292e70c" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No.of Customers to be visited]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="d1f25e91-7e54-4772-bc78-d2208ccba81a" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SWAR_CUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="8fa1ff51-4ded-4329-8f94-f691ff098f94" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SWAR_CUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="7f833027-6d3e-46fb-bc99-a6d9a2a7a163">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="d8aebd85-c4fd-426f-adcd-786c6015b70c" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Actual No.of Customers visited]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="e55d3bdd-b3c7-45dc-8902-102bf60913b6" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SFRS_CUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="aa8b7d99-2a52-48c0-8ad0-97d3fc365ae3" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SFRS_CUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="55e241ed-ba6e-45a3-a035-6241de1607ef">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="d2de9361-476e-473c-bbba-7ccf0e49bcf4" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Amount of POD to be collected in Rs.]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="d013c9a6-d57a-47a7-8964-142eed36e982" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_STARGET_FRS_OD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="e7f166d2-9ea5-4f61-830d-35b23edd0bf7" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{STARGET_FRS_OD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="100" uuid="24b1347d-df69-4dce-ad67-de756cdfa8c2">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="6e1fe016-b177-4ecf-b450-c8d8ddc1bd5b" x="0" y="0" width="100" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Actual POD collected in Rs.]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="eeaaad1b-0f37-4b11-987f-2172d8de5fd0" x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SFRS_OD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+									<reportElement uuid="0871a3b4-37a3-411c-b07e-fb394c950b81" x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true">
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SFRS_OD_AMT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="90" uuid="726615fb-5f1c-4fd1-8860-d1ced5741019">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="bde275e2-8101-43a5-824f-a15fef888195" x="0" y="0" width="90" height="60" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font isBold="true"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[No.of Customers to be moved towards SDR]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="90f47602-a36a-4d32-b414-a2e5e8355e78" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SWAR_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="e9f987c0-4741-44cc-aceb-cc038f32777e" x="0" y="0" width="90" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SWAR_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="89" uuid="c549f62f-4df2-4148-b509-80a62a3c716c">
+							<jr:columnHeader style="table_TH" height="60" rowSpan="1">
+								<staticText>
+									<reportElement uuid="2567139f-75da-45d6-a120-181cf0ae9af9" mode="Transparent" x="0" y="0" width="89" height="60" forecolor="#000000" backcolor="#FFFFFF">
+										<property name="local_mesure_unitx" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.x" value="px"/>
+										<property name="local_mesure_unity" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.y" value="px"/>
+										<property name="local_mesure_unitwidth" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.width" value="px"/>
+										<property name="local_mesure_unitheight" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+										<font fontName="SansSerif" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<text><![CDATA[Actual No.of customers opted for SDR]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="712658a2-d878-4279-a453-54570193470a" x="0" y="0" width="89" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{Sum_SFRS_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell style="table_TD" height="20" rowSpan="1">
+								<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+									<reportElement uuid="4efb3b49-dca2-47da-9f38-2217b2727656" x="0" y="0" width="89" height="20" isPrintWhenDetailOverflows="true"/>
+									<textElement textAlignment="Right">
+										<paragraph lineSpacing="Single"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SFRS_SDRCUST_COUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9829c770-a7b3-4223-984a-c2a2a5c14415" style="table_TD" x="0" y="104" width="311" height="20" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Less: POD collected during the previous Week"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="124cb5e6-1396-4053-9a97-249b5fc1de0c" style="table_TD" x="491" y="83" width="549" height="21" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="8b94507c-5e09-44b2-9c0e-2477071f16ae" style="table_TD" x="311" y="104" width="180" height="20" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_TARGET_FRS_OD_AMT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="343af413-07f8-4b32-b9d8-c53c7821f45f" style="table_TD" x="491" y="124" width="549" height="26" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="8f1595e4-c01b-4880-9ff6-dcda0211bd4f" style="table_TD" x="0" y="124" width="311" height="26" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Balance POD as on Saturday (Two days ago)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="06fa615e-d6a9-4d8e-85c1-9fe82f311924" style="table_TD" x="0" y="83" width="311" height="21" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total POD in All Units as on previous Saturday (9 days ago)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="8926baf7-fd7b-442a-860d-d14e65cc8b90" style="table_TD" x="491" y="104" width="549" height="20" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="24975184-7532-4c4a-9206-9602c16308fc" x="0" y="0" width="1040" height="21" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="12" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bhartiya Samruddhi Finance Limited"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="794e9676-0781-448b-8008-6a315c4f7a84" x="0" y="21" width="1040" height="21" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["WAR Room HO Report (filled every Monday evening)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="af662677-2af3-444d-9661-ea7b5f7cee42" style="table_TD" isPrintRepeatedValues="false" x="311" y="124" width="180" height="26" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WAR_POD}-($V{Sum_TARGET_FRS_OD_AMT} == null ? 0: $V{Sum_TARGET_FRS_OD_AMT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="30e54306-de16-4812-8187-e93758b5bb09" x="0" y="63" width="1040" height="20" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From [ "+$P{fdate}+" ] to [ "+$P{tdate}+" ]"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="eddbcbbc-f948-4672-bf97-24d2efd72f5c" style="table_TD" x="311" y="83" width="180" height="21" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WAR_POD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c3789e11-edbd-47d3-a1cc-02eaabbda67a" x="0" y="42" width="1040" height="21" isPrintWhenDetailOverflows="true">
+					<property name="local_mesure_unity" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Run date : "+new SimpleDateFormat("dd-MMM-yyyy h.mm a").format(new java.util.Date())+" "]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

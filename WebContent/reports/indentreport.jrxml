@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="indentreport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="01694adf-6459-4080-b2a5-5c29fe986462">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="a19a02eb-3d5b-4647-a894-bf2d485e9b79">
+		<parameter name="bsflunit_ucode" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select unit_inde.bsflunit_ucode as unit_id,
+		 unit_inde.bsflunit_name as unit_name,
+ 	         unit_inde.s_id as stationary_id,
+		 unit_inde.s_name as stationary_name
+from unit_inde unit_inde
+where bsflunit_ucode in($P!{bsflunit_ucode})]]>
+		</queryString>
+		<field name="UNIT_ID" class="java.lang.String"/>
+		<field name="UNIT_NAME" class="java.lang.String"/>
+		<field name="STATIONARY_ID" class="java.lang.String"/>
+		<field name="STATIONARY_NAME" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="bsflunit_ucode" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select unit_inde.bsflunit_ucode as unit_id,
+		 unit_inde.bsflunit_name as unit_name,
+ 	         unit_inde.s_id as stationary_id,
+		 unit_inde.s_name as stationary_name
+from unit_inde unit_inde
+where bsflunit_ucode in($P!{bsflunit_ucode})]]>
+	</queryString>
+	<field name="UNIT_ID" class="java.lang.String"/>
+	<field name="UNIT_NAME" class="java.lang.String"/>
+	<field name="STATIONARY_ID" class="java.lang.String"/>
+	<field name="STATIONARY_NAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="141" splitType="Stretch">
+			<componentElement>
+				<reportElement uuid="5058a5ab-7177-476a-9dbc-135326baa5c2" key="table" x="0" y="0" width="802" height="141" isPrintWhenDetailOverflows="true"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="1c51b979-6350-4577-befa-7e5c865e67cd">
+						<datasetParameter name="bsflunit_ucode">
+							<datasetParameterExpression><![CDATA[$P{bsflunit_ucode}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="360" uuid="2bff7e94-f0d9-4e8d-90f0-075f9cf360a0">
+						<jr:tableHeader height="52" rowSpan="1">
+							<textField>
+								<reportElement uuid="afab208f-2162-4dc3-9395-97edc828b0c7" x="0" y="0" width="360" height="17"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA["Bharatiya samruddhi Finance Ltd"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="b51f547f-576f-45e2-bb36-7840533891ba" x="0" y="17" width="360" height="17"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA["Unit Indent"]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="3eda4f14-d218-4751-9744-075c86d4e941" x="0" y="34" width="360" height="17"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA["Run date : "+new SimpleDateFormat("dd-MMM-yyyy h.mm a").format(new java.util.Date())+" "]]></textFieldExpression>
+							</textField>
+						</jr:tableHeader>
+						<jr:columnGroup width="360" uuid="2031366d-4669-4425-a578-3fa0d8ffb810">
+							<jr:columnGroup width="360" uuid="98da4ebe-66ab-454d-8228-c316b27f821a">
+								<jr:column width="90" uuid="031fa781-b586-4c88-87fa-a08bc56c48e0">
+									<jr:columnHeader style="table_CH" height="31" rowSpan="1">
+										<staticText>
+											<reportElement uuid="fac6f7d1-eb31-485e-b285-352ebbf7bd17" x="0" y="0" width="90" height="30"/>
+											<textElement/>
+											<text><![CDATA[unit_Id	]]></text>
+										</staticText>
+									</jr:columnHeader>
+									<jr:detailCell style="table_TD" height="24" rowSpan="1">
+										<textField>
+											<reportElement uuid="bd768b7c-597b-4ea2-a961-bf801418450c" x="0" y="0" width="90" height="20"/>
+											<textElement/>
+											<textFieldExpression><![CDATA[$F{UNIT_ID}]]></textFieldExpression>
+										</textField>
+									</jr:detailCell>
+								</jr:column>
+								<jr:column width="90" uuid="3236903a-b815-4556-b492-161572bf8856">
+									<jr:columnHeader style="table_CH" height="31" rowSpan="1">
+										<staticText>
+											<reportElement uuid="ec7ca0c0-ae0d-4b11-8174-c9d99cb6c0d5" x="0" y="0" width="90" height="30"/>
+											<textElement/>
+											<text><![CDATA[Unit_name]]></text>
+										</staticText>
+									</jr:columnHeader>
+									<jr:detailCell style="table_TD" height="24" rowSpan="1">
+										<textField>
+											<reportElement uuid="bf4295e0-d8bc-4c25-b34b-3e1166990037" x="0" y="0" width="90" height="20"/>
+											<textElement/>
+											<textFieldExpression><![CDATA[$F{UNIT_NAME}]]></textFieldExpression>
+										</textField>
+									</jr:detailCell>
+								</jr:column>
+								<jr:column width="90" uuid="a52b1989-6d0c-4252-bbd2-694068017ddb">
+									<jr:columnHeader style="table_CH" height="31" rowSpan="1">
+										<staticText>
+											<reportElement uuid="926e5fa7-0d0d-4ea1-aefd-1128b874a38b" x="0" y="0" width="90" height="30"/>
+											<textElement/>
+											<text><![CDATA[stationary_id]]></text>
+										</staticText>
+									</jr:columnHeader>
+									<jr:detailCell style="table_TD" height="24" rowSpan="1">
+										<textField>
+											<reportElement uuid="08c887ca-74d1-4682-9c87-1a5b2bd0b56a" x="0" y="0" width="90" height="20"/>
+											<textElement/>
+											<textFieldExpression><![CDATA[$F{STATIONARY_ID}]]></textFieldExpression>
+										</textField>
+									</jr:detailCell>
+								</jr:column>
+								<jr:column width="90" uuid="adaa45e9-0ddf-4baa-a3e0-dc910ffcd14c">
+									<jr:columnHeader style="table_CH" height="31" rowSpan="1">
+										<staticText>
+											<reportElement uuid="59e48f08-98a0-4eef-acb2-3cadb30543fb" x="0" y="0" width="90" height="30"/>
+											<textElement/>
+											<text><![CDATA[stationary_name]]></text>
+										</staticText>
+									</jr:columnHeader>
+									<jr:detailCell style="table_TD" height="24" rowSpan="1">
+										<textField>
+											<reportElement uuid="db7a6390-ab44-4f1b-ba0a-4d25560c2d20" x="0" y="0" width="90" height="20"/>
+											<textElement/>
+											<textFieldExpression><![CDATA[$F{STATIONARY_NAME}]]></textFieldExpression>
+										</textField>
+									</jr:detailCell>
+								</jr:column>
+							</jr:columnGroup>
+						</jr:columnGroup>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

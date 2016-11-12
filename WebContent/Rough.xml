@@ -1,0 +1,89 @@
+<HealthPolicyRequest>
+	<policyDetails>
+		<referenceNumber>RPABSX949902</referenceNumber>
+		<versionNumber>1</versionNumber>
+		<productName>BS01</productName>
+		<inceptionDate>24/12/2013</inceptionDate>
+		<planOption>RPA</planOption>
+		<agentCode>AG011563</agentCode>
+		<agentName>BSFL</agentName>
+		<premium>390</premium>
+		<livesCovered>Self and One Child</livesCovered>
+		<additionalDetails>
+			<additionalInfo>
+				<name>ProposalNumber</name>
+				<value>RPABSX949902</value>
+			</additionalInfo>
+			<additionalInfo>
+				<name>CoverCommencementDate</name>
+				<value>24/12/2013</value>
+			</additionalInfo>
+			<additionalInfo>
+				<name>BASIXUNITNAME</name>
+				<value>GAYA</value>
+			</additionalInfo>
+		</additionalDetails>
+		<proposerDetails>
+			<salutation>Mr</salutation>
+			<firstName>KALAVATI DEVI</firstName>
+			<middleName>.</middleName>
+			<lastName>.</lastName>
+			<gender>FEMALE</gender>
+			<dateOfBirth>24/12/1967</dateOfBirth>
+			<address1>DAHARIYA BIGHA</address1>
+			<address2>BODH GAYA</address2>
+			<city>GAYA</city>
+			<state>BIHAR</state>
+			<pincode>823001</pincode>
+		</proposerDetails>
+		<insuredDetails>
+			<firstName>KALAVATI DEVI</firstName>
+			<middleName>.</middleName>
+			<lastName>.</lastName>
+			<dateOfBirth>24/12/1967</dateOfBirth>
+			<gender>FEMALE</gender>
+			<relationshipWithProposer>SELF</relationshipWithProposer>
+			<preExistingAilments></preExistingAilments>
+			<planOption>RPA</planOption>
+			<premium>390</premium>
+			<nomineeDetails>
+				<firstName>ANIL MAN	JHI</firstName>
+				<middleName>.</middleName>
+				<lastName>.</lastName>
+				<dateOfBirth></dateOfBirth>
+				<gender></gender>
+				<relationshipWithInsured>Son</relationshipWithInsured>
+			</nomineeDetails>
+		</insuredDetails>
+		<insuredDetails>
+			<firstName>ANIL MANJHI</firstName>
+			<middleName>.</middleName>
+			<lastName>.</lastName>
+			<dateOfBirth>24/12/1991</dateOfBirth>
+			<gender>MALE</gender>
+			<relationshipWithProposer>SON</relationshipWithProposer>
+			<preExistingAilments></preExistingAilments>
+			<planOption>RPA</planOption>
+			<premium>390</premium>
+			<nomineeDetails>
+				<firstName>ANIL MANJHI</firstName>
+				<middleName>.</middleName>
+				<lastName>.</lastName>
+				<dateOfBirth></dateOfBirth>
+				<gender></gender>
+				<relationshipWithInsured>Son</relationshipWithInsured>
+			</nomineeDetails>
+		</insuredDetails>
+	</policyDetails>
+	<paymentDetails>
+		<referenceNumber>RPABSX949902</referenceNumber>
+		<rsDepositingBranch>GAYA</rsDepositingBranch>
+		<receiptPayments>
+			<receiptPayment>
+				<receiptNumber>MOR1592900</receiptNumber>
+				<amount>390</amount>
+			</receiptPayment>
+		</receiptPayments>
+		<comments/>
+	</paymentDetails>
+</HealthPolicyRequest>

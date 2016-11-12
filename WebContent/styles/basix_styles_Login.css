@@ -1,0 +1,403 @@
+﻿@charset "utf-8";
+
+.bg {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #333;
+	margin: 0px;
+	padding: 0px;
+	/*background-image: url(../images/page_bg.jpg);
+	background-repeat: repeat-x;*/
+	background-color: #E5E5E5;
+}
+
+.footer {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10px;
+	color: #3E5E8E;
+	background-image: url(../images/footer_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+
+.backgrondimg {
+	background-color: #e0e0e0;
+	position: fixed;
+	text-align: center;
+}
+
+.sortnames a {
+	background-position: right;
+	display: block;
+	color: #1a3c84;
+	width: 100%;
+	text-decoration: none;
+}
+
+.sortnames a:hover {
+	background-position: right;
+	display: block;
+	color: #fff;
+	width: 100%;
+	text-decoration: underline;
+}
+
+.maintable {
+	background-color: #FFF;
+}
+
+.listmenu {
+	width: 220px;
+	height: 200px;
+}
+
+.listmenu1 {
+	width: 120px;
+	vertical-align: top:
+}
+
+.topLinks {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	color: #F7F7F7;
+	background-color: #0172B6;
+}
+
+.loginbox {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #039;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-right-color: #cdd5e0;
+	border-left-color: #cdd5e0;
+	text-align: justify;
+}
+
+.textbox {
+	margin: 0px;
+	padding: 0px;
+	padding-left: 40px;
+}
+
+.topbar {
+	font-family: Verdana, Geneva, sans-serif;
+	background-image: url(../images/topbar_bg.jpg);
+	background-repeat: repeat-x;
+}
+
+.welcomeMsg {
+	font-size: 11px;
+	padding: 2px;
+	text-align: right;
+	margin: 2px;
+	vertical-align: middle;
+}
+
+.welcomeMsg1 {
+	font-size: 12px;
+	padding: 2px;
+	text-align: right;
+	margin: 2px;
+	padding-right: 6px;
+	color: #0172b6;
+	background-image: url(../images/LogoutBack.jpg);
+	font-weight: bold;
+}
+
+.welcomeMsg1 a {
+	background-image: url(../images/LogoutBack.jpg);
+	color: #fff;
+}
+
+.sectionHeader {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFF;
+	background-color: #FFF;
+	background-image: url(../images/tableHeader_bg.jpg);
+	background-repeat: repeat-x;
+}
+
+.sectionHeader1 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFF;
+	background-color: #FFF;
+	background-image: url(../images/InnerMiddleImage.jpg);
+	background-repeat: repeat-x;
+}
+
+.RowImage {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	/*	font-weight: bold;*/
+	color: #484646;
+	/*	background-color: #FFF;*/
+	background-image: url(../images/TableHead.gif);
+	height: 31px;
+	background-repeat: repeat-x;
+	text-align: center;
+}
+
+.RowImage a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	/*	font-weight: bold;*/
+	color: #626060;
+	/*	background-color: #FFF;
+	background-repeat: repeat-x;background-image: url(../images/RowImage.jpg);*/
+	height: 31px;
+	text-decoration: none;
+}
+
+.RowImage a:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12x;
+	/*	font-weight: bold;*/
+	color: #626060;
+	/*	background-color: #FFF;
+	background-repeat: repeat-x;background-image: url(../images/RowImage.jpg);*/
+	height: 31px;
+	text-decoration: underline;
+}
+
+.RowImage2 {
+	border: solid 1px #999;
+	border-bottom: none;
+	border-top: none;
+	border-left: none;
+}
+
+.RowImage1 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #5c606c;
+	/*	background-color: #FFF; */
+	background-image: url(../images/RowImage.gif);
+	height: 31px;
+	background-repeat: repeat-x;
+	text-align: center;
+	padding-bottom: 2px;
+}
+
+.RowImage1 a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #5c606c;
+	/*	background-color: #FFF; font-weight: bold;
+	background-image: url(../images/RowImage1.jpg);background-repeat: repeat-x;*/
+	height: 31px;
+}
+
+.RowImage2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #5c606c;
+	background-color: #FFF;
+	/*background-image: url(../images/RowImage.gif);*/
+	height: 31px;
+	background-repeat: repeat-x;
+	text-align: center;
+	padding-bottom: 2px;
+}
+
+.RowImage2 a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	color: #5c606c;
+	background-color: #FFF;
+	font-weight: bold;
+	/*background-image: url(../images/RowImage1.jpg);background-repeat: repeat-x;*/
+	height: 31px;
+}
+
+.sectionHeadertext {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFF;
+	text-indent: 20px;
+}
+
+.sectionHeader2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #0172B6;
+	background-color: #CECECE;
+}
+
+.loginbox2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	color: #039;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-top-color: #ced5df;
+	border-right-color: #ced5df;
+	border-left-color: #ced5df;
+}
+
+.sectionHeadertext2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #036;
+	text-indent: 10px;
+}
+
+.tablefooters {
+	background-image: url(../images/table_bottom_bg.jpg);
+	background-repeat: repeat-x;
+}
+
+.tablefooters2 {
+	background-image: url(../images/table2_bottom_bg.jpg);
+	background-repeat: repeat-x;
+	background-color: #FFF;
+	background-position: bottom;
+}
+
+.homelinksTab {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFC;
+	background-color: #0474B6;
+	background-image: url(../images/home_linktab_bg.jpg);
+	background-repeat: repeat-x;
+}
+
+.homelinksTab1 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #939395;
+	/*	background-color: #0474B6;
+	background-image: url(../images/home_linktab_bg.jpg);
+	background-repeat: repeat-x;*/
+	text-align: center;
+	border: 1px solid #b7b8ba;
+	height: 35px;
+}
+
+.homelinksTab1 a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #939395;
+	text-align: center;
+}
+
+.homelinksTab1 a:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #6f7270;
+	text-align: center;
+	text-decoration: none;
+	border: none;
+}
+
+.topLinks a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10px;
+	color: #FFF;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.loginbox2 a {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10px;
+	color: #0172B6;
+	text-decoration: none;
+}
+
+.homelinksTab a {
+	color: #FFC;
+	text-decoration: none;
+}
+
+.welcomeMsg a {
+	color: #fff;
+}
+
+.datatables {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	color: #003;
+	background-color: #F4F4F4;
+}
+
+.datatables th {
+	font-weight: bold;
+	background-color: #DBDFEB;
+	border: 1px solid #EBEBEB;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: .85em;
+	font-style: normal;
+	white-space: nowrap;
+}
+
+.datatables td {
+	font-weight: normal;
+	background-color: #F1F3F8;
+	border: 1px solid #EBEBEB;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.85em;
+	font-style: normal;
+	white-space: nowrap;
+	color: #036;
+	margin: 5px;
+	padding: 5px;
+}
+
+.datatables a {
+	font-size: .82em;
+	color: #2B2F5E;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.descText {
+	color: #333;
+	font-weight: normal;
+}
+
+.descText1 {
+	color: #333;
+	font-weight: normal;
+	margin-left: 40px;
+}
+
+.descText2 {
+	color: #9b3266;
+	font-weight: normal;
+	margin-left: 40px;
+}
+
+.descTable {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.95em;
+	color: #036;
+	font-weight: bold;
+}
+
+.descText td {
+	margin: 5px;
+	padding: 5px;
+	font-weight: bold;
+}

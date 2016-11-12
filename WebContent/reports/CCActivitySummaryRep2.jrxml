@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CCActivitySummaryRep" language="groovy" pageWidth="5000" pageHeight="5000" orientation="Landscape" columnWidth="4960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4280dac5-7bc0-470b-8b17-348a97791cce">
+	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="frs_test2"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#0088FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="emp_id" class="java.lang.String"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<parameter name="tdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+l.BSFLUNIT_UCODE,
+(select BSFLUNIT_NAME from BSFLUNIT_mstr where BSFLUNIT_UCODE=l.BSFLUNIT_UCODE) as BSFLUNIT_NAME,
+(select area_name from area_mstr where area_id=(select area_id from BSFLUNIT_mstr where BSFLUNIT_UCODE=l.BSFLUNIT_UCODE)) as area_name,
+to_char(l.uhlog_date,'dd-mm-yyyy') as uhlog_date,
+(select s.activity_id as activity_name from activity_mstr s where s.activity_id=l.activity_id) as activity_id,
+(select s.activity_name as activity_name from activity_mstr s where s.activity_id=l.activity_id) as activity_name,
+(select s1.ACTCAT_NAME as activity_name1 from actcat_mstr s1 where  s1.actcat_id=(select s.actcat_id from activity_mstr s where  s.activity_id=l.activity_id)) as actcat_id,
+nvl((select c.vname from village_mstr c where c.vcode=l.vcode and c.BSFLUNIT_UCODE=l.BSFLUNIT_UCODE),' ') as vname,
+l.UHLOG_AMTSPENT as UHLOG_AMTSPENT,
+l.uhlog_outreach as uhlog_outreach,
+l.uhlog_odcust as uhlog_odcust,
+l.uhlog_odamt as uhlog_odamt,
+l.UHLOG_remarks,
+'Nrts' as UHLOG_SAMPLE
+from uhlog_service l
+where l.BSFLUNIT_UCODE in ($P!{emp_id}) and l.uhlog_date BETWEEN TO_DATE($P{fdate}, 'dd-mm-yyyy') and TO_DATE($P{tdate}, 'dd-mm-yyyy')
+order by AREA_NAME,ACTCAT_ID,l.activity_id,l.BSFLUNIT_UCODE,to_char(l.uhlog_date,'yyyy-mm-dd'),l.uhlog_seqid]]>
+	</queryString>
+	<field name="BSFLUNIT_UCODE" class="java.lang.String"/>
+	<field name="BSFLUNIT_NAME" class="java.lang.String"/>
+	<field name="ACTIVITY_ID" class="java.lang.String"/>
+	<field name="ACTIVITY_NAME" class="java.lang.String"/>
+	<field name="UHLOG_OUTREACH" class="java.math.BigDecimal"/>
+	<field name="AREA_NAME" class="java.lang.String"/>
+	<field name="UHLOG_DATE" class="java.lang.String"/>
+	<field name="ACTCAT_ID" class="java.lang.String"/>
+	<field name="VNAME" class="java.lang.String"/>
+	<field name="UHLOG_AMTSPENT" class="java.math.BigDecimal"/>
+	<field name="UHLOG_ODCUST" class="java.math.BigDecimal"/>
+	<field name="UHLOG_ODAMT" class="java.math.BigDecimal"/>
+	<field name="UHLOG_SAMPLE" class="java.lang.String"/>
+	<variable name="ROW_COUNTER" class="java.lang.Integer" incrementType="Group" incrementGroup="BSFLUNIT_UCODE" calculation="Count">
+		<variableExpression><![CDATA[new java.lang.Integer(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.lang.Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="SumUHLOG_OUTREACH" class="java.math.BigDecimal" incrementType="Group" incrementGroup="BSFLUNIT_UCODE" calculation="Count">
+		<variableExpression><![CDATA[$F{UHLOG_OUTREACH}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="BSFLUNIT_UCODE">
+		<groupExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></groupExpression>
+	</group>
+	<group name="ACTIVITY_ID">
+		<groupExpression><![CDATA[$F{ACTIVITY_ID}]]></groupExpression>
+	</group>
+	<summary>
+		<band height="595" splitType="Stretch">
+			<crosstab isRepeatColumnHeaders="false" isRepeatRowHeaders="false">
+				<reportElement uuid="cf1863eb-3edb-40c6-94e4-f6efb413cde4" x="0" y="40" width="4960" height="555"/>
+				<crosstabParameter name="fdate">
+					<parameterValueExpression><![CDATA[$P{fdate}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="tdate">
+					<parameterValueExpression><![CDATA[$P{tdate}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="SumUHLOG_OUTREACH" class="java.math.BigDecimal">
+					<parameterValueExpression><![CDATA[$V{SumUHLOG_OUTREACH}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabHeaderCell>
+					<cellContents>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement uuid="71aea5c5-f033-48fc-ab9f-3fa143549ed0" style="Crosstab Data Text" x="0" y="55" width="41" height="55" isPrintWhenDetailOverflows="true">
+								<property name="local_mesure_unity" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="local_mesure_unitheight" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="9" isBold="true"/>
+							</textElement>
+							<text><![CDATA[S.No]]></text>
+						</staticText>
+						<textField isStretchWithOverflow="true">
+							<reportElement uuid="7b0a1a96-a77c-4781-83fa-00f3edb325f0" style="Crosstab Data Text" x="0" y="0" width="341" height="55">
+								<property name="local_mesure_unitheight" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<textElement textAlignment="Left" verticalAlignment="Top" markup="none">
+								<font size="9" isBold="true" isUnderline="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA["                                \"Bhartiya Samruddhi Finance Limited\""+"\n"+"                                      \"CC Activity Summary Report\""+"\n"+" Duration : "+new java.text.SimpleDateFormat("dd-MMM-yyyy").format(new java.text.SimpleDateFormat("dd-MM-yyyy").parse($P{fdate}))+" to "+new java.text.SimpleDateFormat("dd-MMM-yyyy").format(new java.text.SimpleDateFormat("dd-MM-yyyy").parse($P{tdate}))+"\n"+" Run date : "+new SimpleDateFormat("dd-MMM-yyyy h.mm a").format(new java.util.Date())+" "]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement uuid="0850b24e-0312-48ad-a40d-4efa5e793e61" style="Crosstab Data Text" x="41" y="55" width="150" height="55" isPrintWhenDetailOverflows="true">
+								<property name="local_mesure_unity" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="local_mesure_unitheight" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="9" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Region Name]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="0850b24e-0312-48ad-a40d-4efa5e793e61" style="Crosstab Data Text" x="191" y="55" width="150" height="55" isPrintWhenDetailOverflows="true">
+								<property name="local_mesure_unity" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="local_mesure_unitheight" value="pixel"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="9" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Unit Name]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="BSFLUNIT_UCODE" width="0" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{BSFLUNIT_UCODE}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField pattern="0000" isBlankWhenNull="true">
+								<reportElement uuid="6280f2f3-0352-4eb2-b676-90447f266c67" style="Crosstab Data Text" x="0" y="0" width="0" height="20">
+									<printWhenExpression><![CDATA[($V{BSFLUNIT_UCODE} != null)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{BSFLUNIT_UCODE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="b69e61d6-0e6d-4c63-9816-882e294d8c0a" x="0" y="0" width="341" height="30" backcolor="#FFFFFF"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Unit wise total]]></text>
+							</staticText>
+							<textField pattern="#,##0" isBlankWhenNull="false">
+								<reportElement uuid="fd79e365-731d-4b84-8e94-3d27ed46a70b" style="Crosstab Data Text" mode="Transparent" x="191" y="0" width="0" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+									<font fontName="SansSerif" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$P{SumUHLOG_OUTREACH}]]></textFieldExpression>
+							</textField>
+							<textField pattern="#,##0" isBlankWhenNull="false">
+								<reportElement uuid="a32b3b16-e258-451f-a5da-2e9f0b61d1f6" style="Crosstab Data Text" mode="Transparent" x="191" y="0" width="0" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+									<font fontName="SansSerif" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+									<paragraph lineSpacing="Single"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("00").format(Math.floor((new java.math.BigDecimal($P{SumUHLOG_OUTREACH})/60)))+":"+new java.text.DecimalFormat("00").format($P{SumUHLOG_OUTREACH}.intValue()%60)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="SNO" width="41">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[new java.lang.Integer($V{ROW_COUNTER}.intValue())]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="e1cad883-d132-4c79-a527-ba52b6b4862e" style="Crosstab Data Text" x="0" y="0" width="41" height="20" isPrintWhenDetailOverflows="true"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Top"/>
+								<textFieldExpression><![CDATA[new BigDecimal($V{SNO})]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="AREA_NAME" width="150">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{AREA_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="9561d351-29bf-41f5-9012-165cb76834b0" style="Crosstab Data Text" x="0" y="0" width="150" height="20">
+									<printWhenExpression><![CDATA[($V{AREA_NAME} != null)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Left"/>
+								<textFieldExpression><![CDATA[$V{AREA_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="BSFLUNIT_NAME" width="150">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{BSFLUNIT_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement uuid="9561d351-29bf-41f5-9012-165cb76834b0" style="Crosstab Data Text" x="0" y="0" width="150" height="20">
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<printWhenExpression><![CDATA[($V{BSFLUNIT_UCODE} != null)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Left"/>
+								<textFieldExpression><![CDATA[$V{BSFLUNIT_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents mode="Opaque"/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="title" height="55">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA["\"Monthly billing report\" "]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="97b95054-392c-40c0-87e9-697bf7d079ac" style="Crosstab Data Text" x="0" y="0" width="150" height="55" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[" Activity Name"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="ACTIVITY_ID" height="0" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ACTIVITY_ID}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="9db9a834-c7f5-411e-8a53-e1c2f588f361" style="Crosstab Data Text" x="0" y="0" width="50" height="0"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="0a894109-f5a7-464b-bd30-00392cdb5503" x="0" y="0" width="100" height="55" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+									<property name="local_mesure_unitwidth" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								</reportElement>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Activity wise total]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="ACTCAT_ID" height="0">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ACTCAT_ID}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="12af663a-4762-4730-92f6-066afa4e4cfd" style="Crosstab Data Text" x="0" y="0" width="50" height="0"/>
+								<textElement>
+									<font isBold="true"/>
+								</textElement>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="ACTIVITY_NAME" height="55">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ACTIVITY_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement uuid="98664ae6-d18d-496e-8bb5-b7a1cc0d68b1" style="Crosstab Data Text" x="0" y="0" width="50" height="27" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitheight" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								</reportElement>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<topPen lineWidth="0.1"/>
+									<leftPen lineWidth="0.1"/>
+									<bottomPen lineWidth="0.1"/>
+									<rightPen lineWidth="0.1"/>
+								</box>
+								<textElement>
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{ACTCAT_ID}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement uuid="f51d5d17-14eb-4073-9e0b-c3cf653105a2" style="Crosstab Data Text" x="0" y="27" width="50" height="28" isPrintWhenDetailOverflows="true">
+									<property name="local_mesure_unitx" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.x" value="px"/>
+									<property name="local_mesure_unity" value="pixel"/>
+									<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								</reportElement>
+								<textElement>
+									<font size="9" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{ACTIVITY_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents mode="Transparent"/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="UHLOG_OUTREACH" class="java.math.BigDecimal" calculation="Count">
+					<measureExpression><![CDATA[$F{UHLOG_OUTREACH}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="20">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0">
+							<reportElement uuid="e5d07e21-8819-40a8-8c67-869fa0f5f4bd" style="Crosstab Data Text" x="0" y="0" width="50" height="20">
+								<printWhenExpression><![CDATA[($V{UHLOG_OUTREACH} != 0.00)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+							</reportElement>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$V{UHLOG_OUTREACH}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" height="30" rowTotalGroup="BSFLUNIT_UCODE">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0">
+							<reportElement uuid="07fb9011-72ea-4a8f-8b8f-4abd1be23103" style="Crosstab Data Text" x="0" y="0" width="50" height="30" backcolor="#FFFFFF">
+								<printWhenExpression><![CDATA[($V{UHLOG_OUTREACH} != 0.00)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+							</reportElement>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$V{UHLOG_OUTREACH}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="100" height="20" columnTotalGroup="ACTIVITY_ID">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0">
+							<reportElement uuid="4552a62a-7c9d-4d8b-9c06-5630344a8fd8" style="Crosstab Data Text" x="0" y="0" width="100" height="20" backcolor="#FFFFFF">
+								<printWhenExpression><![CDATA[($V{UHLOG_OUTREACH} != 0.00)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+							</reportElement>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$V{UHLOG_OUTREACH}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="100" height="30" rowTotalGroup="BSFLUNIT_UCODE" columnTotalGroup="ACTIVITY_ID">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="#,##0">
+							<reportElement uuid="3bbec989-a67d-4e57-9317-42dfbedb8747" style="Crosstab Data Text" x="0" y="0" width="100" height="30" backcolor="#FFFFFF">
+								<printWhenExpression><![CDATA[($V{UHLOG_OUTREACH} != 0.00)?Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+							</reportElement>
+							<textElement textAlignment="Right"/>
+							<textFieldExpression><![CDATA[$V{UHLOG_OUTREACH}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell columnTotalGroup="title">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_UCODE" columnTotalGroup="title">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="AREA_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="AREA_NAME" columnTotalGroup="title">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="AREA_NAME" columnTotalGroup="ACTIVITY_ID">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_NAME" columnTotalGroup="title">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_NAME" columnTotalGroup="ACTIVITY_ID">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell columnTotalGroup="ACTIVITY_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_UCODE" columnTotalGroup="ACTIVITY_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="BSFLUNIT_NAME" columnTotalGroup="ACTIVITY_NAME">
+					<cellContents/>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>
