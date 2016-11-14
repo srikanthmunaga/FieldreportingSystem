@@ -25,6 +25,7 @@ import frs_cls.JdbcConnect;
 
 public class month_target {
 	public static BufferedWriter out = null;
+	//public static BufferedWriter out = null;
 	private static Properties configProp = new Properties();
 	/**
 	 * @param args
